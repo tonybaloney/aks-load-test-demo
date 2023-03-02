@@ -1,0 +1,43 @@
+name: Provision and Deploy
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Azure authentication (load testing)
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_LT_CREDENTIALS }}
+ 
+      - name: 'Azure Load Testing'
+        uses: tonybaloney/load-testing@write_metrics_to_pr
+        with:
+          loadTestConfigFile: 'http-test.yaml'
+          loadTestResource: ${{ secrets.AZURE_LOAD_TEST_NAME }}
+          resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
+          env: |
+            [
+              {
+              "name": "domain",
+              "value": "${{ secrets.AZURE_LOAD_TEST_HOST }}"
+              }
+            ]
+      
+      - uses: actions/upload-artifact@v2
+        with:
+          name: loadTestResults
+          path: ${{ github.workspace }}/loadTest

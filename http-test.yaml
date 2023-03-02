@@ -1,0 +1,5 @@
+version: v0.1
+testName: HTTP Test
+testPlan: http-test.jmx
+description: 'SampleApp Test Run'
+engineInstances: 1
