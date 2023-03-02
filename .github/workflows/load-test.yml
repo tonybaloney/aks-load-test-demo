@@ -32,7 +32,7 @@ jobs:
           env: |
             [
               {
-              "name": "domain",
+              "name": "host",
               "value": "${{ secrets.AZURE_LOAD_TEST_HOST }}"
               }
             ]
