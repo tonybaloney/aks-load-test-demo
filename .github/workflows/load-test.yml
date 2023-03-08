@@ -27,7 +27,7 @@ jobs:
           az aks get-credentials --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} --name aks-demo-1
       - name: Apply Kubernetes Configuration for 1 replica
         run: |
-          envsubst < deployment.yaml | kubectl apply -f -
+          envsubst < app.yaml | kubectl apply -f -
         env:
           FRONTEND_REPLICAS: 1
       - name: 'Azure Load Testing - 1 replica'
@@ -45,7 +45,7 @@ jobs:
             ]
       - name: Apply Kubernetes Configuration for 5 replicas
         run: |
-          envsubst < deployment.yaml | kubectl apply -f -
+          envsubst < app.yaml | kubectl apply -f -
         env:
           FRONTEND_REPLICAS: 5
       - name: 'Azure Load Testing - 5 replicas'
