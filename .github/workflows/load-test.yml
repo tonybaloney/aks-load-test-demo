@@ -25,10 +25,12 @@ jobs:
       - name: Get AKS Credentials
         run: |
           az aks get-credentials --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} --name aks-demo-1
-      - name: Apply Kubernetes Configuration
+      - name: Apply Kubernetes Configuration for 1 replica
         run: |
-          kubectl apply -f app.yaml
-      - name: 'Azure Load Testing'
+          envsubst < deployment.yaml | kubectl apply -f -
+        env:
+          FRONTEND_REPLICAS: 1
+      - name: 'Azure Load Testing - 1 replica'
         uses: tonybaloney/load-testing@write_metrics_to_pr
         with:
           loadTestConfigFile: 'http-test.yaml'
@@ -41,7 +43,24 @@ jobs:
               "value": "${{ secrets.AZURE_LOAD_TEST_HOST }}"
               }
             ]
-      
+      - name: Apply Kubernetes Configuration for 5 replicas
+        run: |
+          envsubst < deployment.yaml | kubectl apply -f -
+        env:
+          FRONTEND_REPLICAS: 5
+      - name: 'Azure Load Testing - 5 replicas'
+        uses: tonybaloney/load-testing@write_metrics_to_pr
+        with:
+          loadTestConfigFile: 'http-test.yaml'
+          loadTestResource: ${{ secrets.AZURE_LOAD_TEST_NAME }}
+          resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
+          env: |
+            [
+              {
+              "name": "host",
+              "value": "${{ secrets.AZURE_LOAD_TEST_HOST }}"
+              }
+            ]
       - uses: actions/upload-artifact@v2
         with:
           name: loadTestResults
