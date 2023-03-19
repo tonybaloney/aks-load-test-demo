@@ -13,7 +13,12 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        frontend_replicas: [1, 3, 5]
+        frontend_cpu_limit: [250m, 500m]
+        backend_mem_limit: [256Mi, 512Mi]
+      max-parallel: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -29,26 +34,10 @@ jobs:
         run: |
           envsubst < app.yaml | kubectl apply -f -
         env:
-          FRONTEND_REPLICAS: 1
-      - name: 'Azure Load Testing - 1 replica'
-        uses: tonybaloney/load-testing@write_metrics_to_pr
-        with:
-          loadTestConfigFile: 'http-test.yaml'
-          loadTestResource: ${{ secrets.AZURE_LOAD_TEST_NAME }}
-          resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
-          env: |
-            [
-              {
-              "name": "host",
-              "value": "${{ secrets.AZURE_LOAD_TEST_HOST }}"
-              }
-            ]
-      - name: Apply Kubernetes Configuration for 5 replicas
-        run: |
-          envsubst < app.yaml | kubectl apply -f -
-        env:
-          FRONTEND_REPLICAS: 5
-      - name: 'Azure Load Testing - 5 replicas'
+          FRONTEND_REPLICAS: ${{ matrix.frontend_replicas }}
+          FRONTEND_CPU_LIMIT: ${{ matrix.frontend_cpu_limit }}
+          BACKEND_MEM_LIMIT: ${{ matrix.backend_mem_limit }}
+      - name: 'Azure Load Testing'
         uses: tonybaloney/load-testing@write_metrics_to_pr
         with:
           loadTestConfigFile: 'http-test.yaml'
