@@ -28,7 +28,7 @@ jobs:
           push: true # Will only build if this is not here
           context: azure-vote
           tags: |
-            aksloadtestdemo.azurecr.io/${{ github.repository }}:${{ github.sha::7 }}
+            aksloadtestdemo.azurecr.io/${{ github.repository }}:${{ github.sha }}
             aksloadtestdemo.azurecr.io/${{ github.repository }}:latest
   load-test:
     runs-on: ubuntu-latest
@@ -57,12 +57,15 @@ jobs:
           FRONTEND_CPU_LIMIT: ${{ matrix.frontend_cpu_limit }}
           FRONTEND_MEM_LIMIT: ${{ matrix.frontend_mem_limit }}
           FRONTEND_IMAGE: aksloadtestdemo.azurecr.io/${{ github.repository }}:${{ github.sha }}
+      - name: Create version ID
+        id: version
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - name: 'Azure Load Testing'
         uses: tonybaloney/load-testing@write_metrics_to_pr
         with:
           loadTestConfigFile: 'http-test.yaml'
           loadTestResource: ${{ secrets.AZURE_LOAD_TEST_NAME }}
-          loadTestRunName: "Automated Load Test Run ${{ github.sha }}"
+          loadTestRunName: "Automated Test Run ${{ steps.version.outputs.sha_short }}"
           loadTestRunDescription: "frontend (${{ matrix.frontend_replicas }}, ${{ matrix.frontend_cpu_limit }}, ${{ matrix.frontend_mem_limit }})" 
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
           env: |
