@@ -36,13 +36,14 @@ jobs:
         env:
           FRONTEND_REPLICAS: ${{ matrix.frontend_replicas }}
           FRONTEND_CPU_LIMIT: ${{ matrix.frontend_cpu_limit }}
-          BACKEND_MEM_LIMIT: ${{ matrix.backend_mem_limit }}
+          # BACKEND_MEM_LIMIT: ${{ matrix.backend_mem_limit }}
       - name: 'Azure Load Testing'
         uses: tonybaloney/load-testing@write_metrics_to_pr
         with:
           loadTestConfigFile: 'http-test.yaml'
           loadTestResource: ${{ secrets.AZURE_LOAD_TEST_NAME }}
-          loadTestRunDisplayName: "frontend (${{ matrix.frontend_replicas }}, ${{ matrix.frontend_cpu_limit }}), backend (${{ matrix.backend_mem_limit }})" 
+          loadTestRunName: "Automated Load Test Run ${{ github.ref }}"
+          loadTestRunDescription: "frontend (${{ matrix.frontend_replicas }}, ${{ matrix.frontend_cpu_limit }}), backend (${{ matrix.backend_mem_limit }})" 
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
           env: |
             [
