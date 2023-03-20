@@ -42,7 +42,7 @@ jobs:
         with:
           loadTestConfigFile: 'http-test.yaml'
           loadTestResource: ${{ secrets.AZURE_LOAD_TEST_NAME }}
-          loadTestRunDisplayName: "${{ GITHUB_SHA::6 }} ${{ matrix.frontend_replicas }} frontend, ${{ matrix.frontend_cpu_limit }}, ${{ matrix.backend_mem_limit }}" 
+          loadTestRunDisplayName: "frontend (${{ matrix.frontend_replicas }}, ${{ matrix.frontend_cpu_limit }}), backend (${{ matrix.backend_mem_limit }})" 
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
           env: |
             [
