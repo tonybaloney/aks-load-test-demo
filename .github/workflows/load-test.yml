@@ -49,7 +49,7 @@ jobs:
       - name: Get AKS Credentials
         run: |
           az aks get-credentials --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} --name aks-demo-1
-      - name: Apply Kubernetes Configuration for 1 replica
+      - name: Apply Kubernetes Configuration
         run: |
           envsubst < app.yaml | kubectl apply -f -
         env:
