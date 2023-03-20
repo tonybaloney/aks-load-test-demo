@@ -28,7 +28,7 @@ jobs:
           push: true # Will only build if this is not here
           context: azure-vote
           tags: |
-            aksloadtestdemo.azurecr.io/${{ github.repository }}:${{ github.sha }}
+            aksloadtestdemo.azurecr.io/${{ github.repository }}:${{ github.sha::7 }}
             aksloadtestdemo.azurecr.io/${{ github.repository }}:latest
   load-test:
     runs-on: ubuntu-latest
