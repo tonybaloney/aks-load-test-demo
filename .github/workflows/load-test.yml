@@ -35,7 +35,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        frontend_replicas: [1, 3, 5]
+        frontend_replicas: [3, 5]
         frontend_cpu_limit: [250m, 500m]
         frontend_mem_limit: [256Mi, 512Mi]
       max-parallel: 1
