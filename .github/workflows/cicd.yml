@@ -35,9 +35,9 @@ jobs:
     needs: build
     strategy:
       matrix:
-        frontend_replicas: [3, 5]
-        frontend_cpu_limit: [250m, 500m]
-        frontend_mem_limit: [256Mi, 512Mi]
+        frontend_replicas: [3]
+        frontend_cpu_limit: [250m]
+        frontend_mem_limit: [256Mi]
       max-parallel: 1
     steps:
       - name: Checkout
@@ -63,10 +63,10 @@ jobs:
       - name: 'Azure Load Testing'
         uses: tonybaloney/load-testing@write_metrics_to_pr
         with:
-          loadTestConfigFile: 'http-test.yaml'
+          loadTestConfigFile: 'release-test.yaml'
           loadTestResource: ${{ secrets.AZURE_LOAD_TEST_NAME }}
-          loadTestRunName: "Automated Test Run ${{ steps.version.outputs.sha_short }}"
-          loadTestRunDescription: "frontend (${{ matrix.frontend_replicas }}, ${{ matrix.frontend_cpu_limit }}, ${{ matrix.frontend_mem_limit }})" 
+          loadTestRunName: "GitHub Action ${{ steps.version.outputs.sha_short }}"
+          loadTestRunDescription: ${{ github.event.head_commit.message }}"
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
           env: |
             [

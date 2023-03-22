@@ -1,5 +1,5 @@
 version: v0.1
-testName: HTTP
+testName: AKS Configuration Test
 testPlan: http-test.jmx
 description: 'SampleApp Test Run'
 engineInstances: 1
