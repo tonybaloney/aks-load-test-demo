@@ -1,5 +1,5 @@
 version: v0.1
-testName: Release Test
+testName: Release
 testPlan: http-test.jmx
-description: 'SampleApp Test Run'
+description: 'HTTP Release Test'
 engineInstances: 1
