@@ -66,7 +66,7 @@ jobs:
           loadTestConfigFile: 'release-test.yaml'
           loadTestResource: ${{ secrets.AZURE_LOAD_TEST_NAME }}
           loadTestRunName: "GitHub Action ${{ steps.version.outputs.sha_short }}"
-          loadTestRunDescription: ${{ github.event.head_commit.message }}"
+          loadTestRunDescription: ${{ github.event.head_commit.message }}
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
           env: |
             [
