@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, make_response
 import os
 import redis
 import socket
@@ -81,6 +81,8 @@ def index():
 
             # Insert vote result into DB
             vote = request.form['vote']
+            if vote not in [button1, button2]:
+                return make_response('Invalid request', 400)
             r.incr(vote,1)
             
             # Get current values
