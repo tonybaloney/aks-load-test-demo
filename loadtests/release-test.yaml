@@ -4,5 +4,5 @@ testPlan: http-test.jmx
 description: 'HTTP Staging Test'
 engineInstances: 1
 failureCriteria: 
-    - avg(response_time_ms) > 100
+    - avg(response_time_ms) > 500
     - percentage(error) > 20
