@@ -1,5 +1,8 @@
 version: v0.1
 testName: Release
 testPlan: http-test.jmx
-description: 'HTTP Release Test'
+description: 'HTTP Staging Test'
 engineInstances: 1
+failureCriteria: 
+    - avg(response_time_ms) > 100
+    - percentage(error) > 20
