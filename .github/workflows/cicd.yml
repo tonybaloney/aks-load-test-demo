@@ -51,7 +51,7 @@ jobs:
           az aks get-credentials --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} --name aks-demo-1
       - name: Apply Kubernetes Configuration
         run: |
-          envsubst < test_app.yaml | kubectl apply -f -
+          envsubst < manifests/staging-app.yaml | kubectl apply -f -
         env:
           FRONTEND_IMAGE: aksloadtestdemo.azurecr.io/${{ github.repository }}:${{ github.sha }}
       - name: Create version ID
@@ -62,7 +62,7 @@ jobs:
       - name: 'Azure Load Testing'
         uses: tonybaloney/load-testing@write_metrics_to_pr
         with:
-          loadTestConfigFile: 'release-test.yaml'
+          loadTestConfigFile: 'loadtests/release-test.yaml'
           loadTestResource: ${{ secrets.AZURE_LOAD_TEST_NAME }}
           loadTestRunName: "GitHub Action ${{ steps.version.outputs.sha_short }}"
           loadTestRunDescription: ${{ github.event.head_commit.message }}
@@ -99,7 +99,7 @@ jobs:
           az aks get-credentials --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} --name aks-demo-1
       - name: Apply Kubernetes Configuration
         run: |
-          envsubst < app.yaml | kubectl apply -f -
+          envsubst < manifests/app.yaml | kubectl apply -f -
         env:
           FRONTEND_REPLICAS: ${{ matrix.frontend_replicas }}
           FRONTEND_CPU_LIMIT: ${{ matrix.frontend_cpu_limit }}

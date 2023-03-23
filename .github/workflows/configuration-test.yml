@@ -55,11 +55,13 @@ jobs:
           FRONTEND_IMAGE: aksloadtestdemo.azurecr.io/${{ github.repository }}:${{ github.sha }}
       - name: Create version ID
         id: version
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "FRONTEND_HOST=kubectl get service azure-vote-front -o jsonpath='{.status.loadBalancer.ingress[0].ip}'" >> $GITHUB_OUTPUT
       - name: 'Azure Load Testing'
         uses: tonybaloney/load-testing@write_metrics_to_pr
         with:
-          loadTestConfigFile: 'configuration-test.yaml'
+          loadTestConfigFile: 'loadtests/configuration-test.yaml'
           loadTestResource: ${{ secrets.AZURE_LOAD_TEST_NAME }}
           loadTestRunName: "Automated Test Run ${{ steps.version.outputs.sha_short }}"
           loadTestRunDescription: "frontend (${{ matrix.frontend_replicas }}, ${{ matrix.frontend_cpu_limit }}, ${{ matrix.frontend_mem_limit }})" 
@@ -68,7 +70,7 @@ jobs:
             [
               {
               "name": "host",
-              "value": "${{ secrets.AZURE_LOAD_TEST_HOST }}"
+              "value": "${{ steps.version.outputs.FRONTEND_HOST }}"
               }
             ]
       - uses: actions/upload-artifact@v2
