@@ -62,7 +62,7 @@ jobs:
       - name: 'Azure Load Testing'
         uses: tonybaloney/load-testing@write_metrics_to_pr
         with:
-          loadTestConfigFile: 'loadtests/release-test.yaml'
+          loadTestConfigFile: 'loadtests/staging-test.yaml'
           loadTestResource: ${{ secrets.AZURE_LOAD_TEST_NAME }}
           loadTestRunName: "GitHub Action ${{ steps.version.outputs.sha_short }}"
           loadTestRunDescription: ${{ github.event.head_commit.message }}
