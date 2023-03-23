@@ -17,7 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: aksloadtestdemo.azurecr.io
           username: ${{ secrets.ACR_LOGIN }}
@@ -74,7 +74,7 @@ jobs:
               "value": "${{ steps.version.outputs.FRONTEND_HOST }}"
               }
             ]
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: loadTestResults
           path: ${{ github.workspace }}/loadTest
