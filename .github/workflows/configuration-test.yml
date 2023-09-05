@@ -47,7 +47,7 @@ jobs:
           az aks get-credentials --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} --name aks-demo-1
       - name: Apply Kubernetes Configuration
         run: |
-          envsubst < app.yaml | kubectl apply -f -
+          envsubst < manifests/app.yaml | kubectl apply -f -
         env:
           FRONTEND_REPLICAS: ${{ matrix.frontend_replicas }}
           FRONTEND_CPU_LIMIT: ${{ matrix.frontend_cpu_limit }}
